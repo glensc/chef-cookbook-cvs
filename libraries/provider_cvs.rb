@@ -39,7 +39,6 @@ class Chef
         requirements.assert(:all_actions) do |a|
           # Make sure the parent dir exists, or else fail.
           # for why run, print a message explaining the potential error.
-          parent_directory = ::File.dirname(@new_resource.destination)
           a.assertion { ::File.directory?(parent_directory) }
           a.failure_message(Chef::Exceptions::MissingParentDirectory, 
             "Cannot checkout #{@new_resource} to #{@new_resource.destination}, the enclosing directory #{parent_directory} does not exist")
@@ -47,10 +46,8 @@ class Chef
         end
       end
 
-      # TODO: check if target is same cvs module as we are checking out!
       def action_checkout
         if target_dir_non_existent_or_empty?
-          parent_directory = ::File.dirname(@new_resource.destination)
           converge_by("perform checkout of #{@new_resource.repository} into #{@new_resource.destination}") do
             run_command(run_options(:command => checkout_command, :cwd => parent_directory))
           end
@@ -59,6 +56,7 @@ class Chef
         end
       end
 
+      # TODO: check if target is same cvs module as we are checking out!
       def action_sync
         assert_target_directory_valid!
         if ::File.exist?(::File.join(@new_resource.destination, "CVS"))
@@ -72,18 +70,8 @@ class Chef
         end
       end
       
-      def sync_command
-        c = scm verbose,
-          "-d", @new_resource.cvsroot,
-          :update,
-          "-r#{@new_resource.revision}"
-        Chef::Log.debug "#{@new_resource} updated working copy #{@new_resource.destination} to revision #{@new_resource.revision}"
-        c
-      end
-
       def action_export
         if target_dir_non_existent_or_empty?
-          parent_directory = ::File.dirname(@new_resource.destination)
           converge_by("export #{@new_resource.repository} into #{@new_resource.destination}") do
             run_command(run_options(:command => export_command, :cwd => parent_directory))
           end
@@ -92,11 +80,11 @@ class Chef
         end
       end
 
+      private
+
       def checkout_command
         subdir = ::File.basename(@new_resource.destination)
-        c = scm verbose,
-            "-d", @new_resource.cvsroot,
-            :checkout,
+        c = scm :checkout,
             "-d", subdir,
             "-r", @new_resource.revision,
             @new_resource.repository
@@ -104,11 +92,16 @@ class Chef
         c
       end
 
+      def sync_command
+        c = scm :update,
+          "-r#{@new_resource.revision}"
+        Chef::Log.debug "#{@new_resource} updated working copy #{@new_resource.destination} to revision #{@new_resource.revision}"
+        c
+      end
+
       def export_command
         subdir = ::File.basename(@new_resource.destination)
-        c = scm verbose,
-            "-d", @new_resource.cvsroot,
-            :export,
+        c = scm :export,
             "-d", subdir,
             "-r", @new_resource.revision,
             @new_resource.repository
@@ -124,14 +117,16 @@ class Chef
         run_opts
       end
 
-      private
-
       def verbose
         "-q"
       end
 
       def scm(*args)
-        ['cvs', *args].compact.join(" ")
+        ['cvs', verbose, "-d", @new_resource.cvsroot, *args].compact.join(" ")
+      end
+
+      def parent_directory
+        ::File.dirname(@new_resource.destination)
       end
 
       def target_dir_non_existent_or_empty?
