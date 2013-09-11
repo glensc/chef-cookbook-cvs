@@ -1,61 +1,39 @@
-cvs Cookbook
+CVS Cookbook
 ============
-TODO: Enter the cookbook description here.
 
-e.g.
-This cookbook makes your favorite breakfast sandwhich.
+Provides LWRP for CVS Repositories
 
 Requirements
 ------------
-TODO: List your cookbook requirements. Be sure to include any requirements this cookbook has on platforms, libraries, other cookbooks, packages, operating systems, etc.
+A `cvs` client installed
 
-e.g.
-#### packages
-- `toaster` - cvs needs toaster to brown your bagel.
 
-Attributes
-----------
-TODO: List you cookbook attributes here.
+Resources and Providers
+=======================
 
-e.g.
-#### cvs::default
-<table>
-  <tr>
-    <th>Key</th>
-    <th>Type</th>
-    <th>Description</th>
-    <th>Default</th>
-  </tr>
-  <tr>
-    <td><tt>['cvs']['bacon']</tt></td>
-    <td>Boolean</td>
-    <td>whether to include bacon</td>
-    <td><tt>true</tt></td>
-  </tr>
-</table>
+`cvs`
+--------
 
-Usage
------
-#### cvs::default
-TODO: Write usage instructions for each cookbook.
+The `cvs` LWRP can be used to checkout repositories with CVS
 
-e.g.
-Just include `cvs` in your node's `run_list`:
+    cvs "/tmp/deploy" do
+      cvsroot "/usr/local/cvs"
+      repository "CVSROOT"
+      action :checkout
+    end
 
-```json
-{
-  "name":"my_node",
-  "run_list": [
-    "recipe[cvs]"
-  ]
-}
-```
+LWRP attributes:
+
+* `cvsroot`
+    * Repository root aka $CVSROOT variable.
+* `repository`
+    * Module inside CVSROOT
+* `action`
+    * Action to run, `:checkout`, `:sync`, `:export`
 
 Contributing
 ------------
-TODO: (optional) If this is a public cookbook, detail the process for contributing. If this is a private cookbook, remove this section.
 
-e.g.
 1. Fork the repository on Github
 2. Create a named feature branch (like `add_component_x`)
 3. Write you change
@@ -63,6 +41,21 @@ e.g.
 5. Run the tests, ensuring they all pass
 6. Submit a Pull Request using Github
 
-License and Authors
--------------------
-Authors: TODO: List authors
+License and Author
+==================
+
+Author:: Elan Ruusamäe (<glen@delfi.ee>)
+
+Copyright 2013, Elan Ruusamäe
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
