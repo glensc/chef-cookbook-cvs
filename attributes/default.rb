@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: cvs
-# Recipe:: default
+# Attributes:: default
 #
 # Copyright 2013, Elan Ruusamäe
 #
@@ -17,6 +17,6 @@
 # limitations under the License.
 #
 
-package 'cvs' do
-  package_name node['cvs']['package']
-end
+# Name of package providing CVS client
+# Possible values: cvs, cvsnt
+default['cvs']['package'] = 'cvs'
