@@ -40,7 +40,7 @@ class Chef
           # Make sure the parent dir exists, or else fail.
           # for why run, print a message explaining the potential error.
           a.assertion { ::File.directory?(parent_directory) }
-          a.failure_message(Chef::Exceptions::MissingParentDirectory, 
+          a.failure_message(Chef::Exceptions::MissingParentDirectory,
             "Cannot checkout #{@new_resource} to #{@new_resource.destination}, the enclosing directory #{parent_directory} does not exist")
           a.whyrun("Directory #{parent_directory} does not exist, assuming it would have been created")
         end
@@ -64,12 +64,12 @@ class Chef
           converge_by("sync #{@new_resource.destination} from #{@new_resource.repository}") do
             run_command(run_options(:command => sync_command))
             Chef::Log.info "#{@new_resource} updated"
-          end 
+          end
         else
           action_checkout
         end
       end
-      
+
       def action_export
         if target_dir_non_existent_or_empty?
           converge_by("export #{@new_resource.repository} into #{@new_resource.destination}") do
