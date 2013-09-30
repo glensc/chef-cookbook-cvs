@@ -86,15 +86,14 @@ class Chef
         subdir = ::File.basename(@new_resource.destination)
         c = scm :checkout,
             "-d", subdir,
-            "-r", @new_resource.revision,
+            revision,
             @new_resource.repository
         Chef::Log.info "#{@new_resource} checked out #{@new_resource.repository} at revision #{@new_resource.revision} to #{@new_resource.destination}"
         c
       end
 
       def sync_command
-        c = scm :update,
-          "-r#{@new_resource.revision}"
+        c = scm :update, revision
         Chef::Log.debug "#{@new_resource} updated working copy #{@new_resource.destination} to revision #{@new_resource.revision}"
         c
       end
@@ -103,7 +102,7 @@ class Chef
         subdir = ::File.basename(@new_resource.destination)
         c = scm :export,
             "-d", subdir,
-            "-r", @new_resource.revision,
+            revision
             @new_resource.repository
         Chef::Log.info "#{@new_resource} exported #{@new_resource.repository} at revision #{@new_resource.revision} to #{@new_resource.destination}"
         c
@@ -123,6 +122,16 @@ class Chef
 
       def scm(*args)
         ['cvs', verbose, "-d", @new_resource.cvsroot, *args].compact.join(" ")
+      end
+
+      # make command for checkout
+      # if revision is HEAD, use -A option, otherwise the -r option
+      def revision
+        if @new_resource.revision == 'HEAD'
+            ["-A"]
+        else
+            ["-r", @new_resource.revision]
+        end
       end
 
       def parent_directory
