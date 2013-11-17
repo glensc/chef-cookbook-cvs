@@ -111,7 +111,7 @@ class Chef
       def run_options(run_opts={})
         run_opts[:user] = @new_resource.user if @new_resource.user
         run_opts[:group] = @new_resource.group if @new_resource.group
-        run_opts[:environment] = {"CVS_SSH" => @new_resource.ssh_wrapper} if @new_resource.ssh_wrapper
+        run_opts[:environment] = {"CVS_RSH" => @new_resource.ssh_wrapper} if @new_resource.ssh_wrapper
         run_opts[:cwd] ||= @new_resource.destination
         run_opts
       end
