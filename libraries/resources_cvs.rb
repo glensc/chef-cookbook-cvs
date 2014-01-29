@@ -16,20 +16,19 @@
 # limitations under the License.
 #
 
-require "chef/resource/scm"
+require 'chef/resource/scm'
 
 class Chef
   class Resource
     class Cvs < Chef::Resource::Scm
-
-      def initialize(name, run_context=nil)
+      def initialize(name, run_context = nil)
         super
         @cvsroot = ''
         @resource_name = :cvs
         @provider = Chef::Provider::Cvs
       end
 
-      def cvsroot(arg=nil)
+      def cvsroot(arg = nil)
         @cvsroot, arg = nil, nil if arg == false
         set_or_return(
           :cvsroot,

@@ -24,7 +24,6 @@ require 'fileutils'
 class Chef
   class Provider
     class Cvs < Chef::Provider
-
       include Chef::Mixin::Command
 
       def whyrun_supported?
@@ -59,7 +58,7 @@ class Chef
       # TODO: check if target is same cvs module as we are checking out!
       def action_sync
         assert_target_directory_valid!
-        if ::File.exist?(::File.join(@new_resource.destination, "CVS"))
+        if ::File.exist?(::File.join(@new_resource.destination, 'CVS'))
           Chef::Log.debug "#{@new_resource} update"
           converge_by("sync #{@new_resource.destination} from #{@new_resource.repository}") do
             run_command(run_options(:command => sync_command))
@@ -85,7 +84,7 @@ class Chef
       def checkout_command
         subdir = ::File.basename(@new_resource.destination)
         c = scm :checkout,
-            "-d", subdir,
+            '-d', subdir,
             revision,
             @new_resource.repository
         Chef::Log.info "#{@new_resource} checked out #{@new_resource.repository} at revision #{@new_resource.revision} to #{@new_resource.destination}"
@@ -101,36 +100,36 @@ class Chef
       def export_command
         subdir = ::File.basename(@new_resource.destination)
         c = scm :export,
-            "-d", subdir,
-            revision
-            @new_resource.repository
+          '-d', subdir,
+          revision,
+          @new_resource.repository
         Chef::Log.info "#{@new_resource} exported #{@new_resource.repository} at revision #{@new_resource.revision} to #{@new_resource.destination}"
         c
       end
 
-      def run_options(run_opts={})
+      def run_options(run_opts = {})
         run_opts[:user] = @new_resource.user if @new_resource.user
         run_opts[:group] = @new_resource.group if @new_resource.group
-        run_opts[:environment] = {"CVS_RSH" => @new_resource.ssh_wrapper} if @new_resource.ssh_wrapper
+        run_opts[:environment] = { 'CVS_RSH' => @new_resource.ssh_wrapper } if @new_resource.ssh_wrapper
         run_opts[:cwd] ||= @new_resource.destination
         run_opts
       end
 
       def verbose
-        "-q"
+        '-q'
       end
 
       def scm(*args)
-        ['cvs', verbose, "-d", @new_resource.cvsroot, *args].compact.join(" ")
+        ['cvs', verbose, '-d', @new_resource.cvsroot, *args].compact.join(' ')
       end
 
       # make command for checkout
       # if revision is HEAD, use -A option, otherwise the -r option
       def revision
         if @new_resource.revision == 'HEAD'
-            ["-A"]
+          ['-A']
         else
-            ["-r", @new_resource.revision]
+          ['-r', @new_resource.revision]
         end
       end
 
@@ -139,7 +138,7 @@ class Chef
       end
 
       def target_dir_non_existent_or_empty?
-        !::File.exist?(@new_resource.destination) || Dir.entries(@new_resource.destination).sort == ['.','..']
+        !::File.exist?(@new_resource.destination) || Dir.entries(@new_resource.destination).sort == ['.', '..']
       end
 
       def assert_target_directory_valid!
