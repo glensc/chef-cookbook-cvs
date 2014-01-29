@@ -41,6 +41,12 @@ Contributing
 5. Run the tests, ensuring they all pass
 6. Submit a Pull Request using Github
 
+Testing
+=======
+
+1. bundle install --without development --path .
+3. bundle exec foodcritic -f any .
+
 License and Author
 ==================
 
