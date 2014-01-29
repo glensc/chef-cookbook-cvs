@@ -1,0 +1,23 @@
+AllCops:
+  Excludes:
+    - test/**
+    - vendor/**
+    - ruby/**
+AsciiComments:
+  Enabled: false
+Encoding:
+  Enabled: false
+AlignParameters:
+  Enabled: false
+Encoding:
+  Enabled: false
+HashSyntax:
+  Enabled: false
+LineLength:
+  Enabled: false
+ClassLength:
+  Max: 110
+SignalException:
+  Enabled: false
+Documentation:
+  Enabled: false

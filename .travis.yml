@@ -3,3 +3,4 @@ rvm:
 bundler_args: --without development
 script:
   - bundle exec foodcritic -f any .
+  - bundle exec rubocop

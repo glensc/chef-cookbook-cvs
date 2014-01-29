@@ -45,7 +45,8 @@ Testing
 =======
 
 1. bundle install --without development --path .
-3. bundle exec foodcritic -f any .
+2. bundle exec foodcritic -f any .
+3. bundle exec rubocop
 
 License and Author
 ==================
