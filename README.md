@@ -18,11 +18,13 @@ Resources and Providers
 
 The `cvs` LWRP can be used to checkout repositories with CVS
 
-    cvs "/tmp/deploy" do
-      cvsroot "/usr/local/cvs"
-      repository "CVSROOT"
-      action :checkout
-    end
+```ruby
+cvs '/tmp/deploy' do
+  cvsroot '/usr/local/cvs'
+  repository 'CVSROOT'
+  action :checkout
+end
+```
 
 LWRP attributes:
 
