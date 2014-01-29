@@ -48,22 +48,22 @@ Contributing
 Testing
 =======
 
-1. bundle install --without development --path .
-2. bundle exec foodcritic -f any .
-3. bundle exec rubocop
+1. `bundle install --without development --path .`
+2. `bundle exec foodcritic -f any .`
+3. `bundle exec rubocop`
 
 License and Author
 ==================
 
 Author:: Elan Ruusamäe (<glen@delfi.ee>)
 
-Copyright 2013, Elan Ruusamäe
+Copyright 2013-2014, Elan Ruusamäe
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
