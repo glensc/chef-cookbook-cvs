@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/glensc/chef-cookbook-cvs.png?branch=master)](https://travis-ci.org/glensc/chef-cookbook-cvs)
+
 CVS Cookbook
 ============
 
