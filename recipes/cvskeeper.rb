@@ -1,6 +1,7 @@
 # setup "cvskeeper" (based on etckeeper)
 
 include_recipe 'chef_handler::default'
+include_recipe 'chef-client::config'
 
 cookbook_file "#{node.chef_handler.handler_path}/cvskeeper-handler.rb" do
   source 'cvskeeper-handler.rb'
