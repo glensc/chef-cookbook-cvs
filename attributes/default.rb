@@ -20,3 +20,6 @@
 # Name of package providing CVS client
 # Possible values: cvs, cvsnt
 default['cvs']['package'] = 'cvs'
+
+# paths that cvskeeper should not track
+default['cvs']['cvskeeper']['exclude'] = %w[/etc/mtab /etc/ldap.secret]

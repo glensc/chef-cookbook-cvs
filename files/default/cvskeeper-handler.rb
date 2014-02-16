@@ -4,12 +4,14 @@ require 'chef/mixin/shell_out'
 module Cvskeeper
   class EventHandler < ::Chef::EventDispatch::Base
     @resource_collection = nil
+    @node = nil
 
     def converge_start(run_context)
       return unless Cvskeeper::Helpers.is_cvs_repo?
 
       # save resource collection for converge complete
       @resource_collection = run_context.resource_collection
+      @node = run_context.node
 
       files = collect_paths(all_resources)
       Cvskeeper::Helpers.add_vcs(files)
@@ -42,6 +44,11 @@ module Cvskeeper
       @resource_collection.select { |r| r.updated }
     end
 
+    def exclude_path
+      r = Regexp.union(@node['cvs']['cvskeeper']['exclude'])
+      Regexp.new("^(?:#{r.source})", r.options)
+    end
+
     def collect_paths(resources)
       files = []
       resources.each do |r|
@@ -52,7 +59,10 @@ module Cvskeeper
         next if r.should_skip?(r.action)
         files << r.path
       end
-      files.uniq
+
+      files.uniq.reject do |f|
+        exclude_path.match(f)
+      end
     end
   end
 
