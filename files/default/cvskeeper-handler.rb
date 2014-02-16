@@ -97,6 +97,7 @@ module Cvskeeper
         .uniq
         .reject { |d| in_vcs?(d) }
         .reject { |d| !Dir.exists?(d) }
+        .reject { |d| Dir.exists?("#{d}/CVS") }
         .map { |d| relpath(d) }
         .compact
 
