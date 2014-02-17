@@ -174,7 +174,7 @@ module Cvskeeper
       env = {}
       env['CVS_RSH'] = cvswrapper if File.exists?(cvswrapper)
       command = "set -ex; #{command}"
-      so = shell_out(command, :env => env, :cwd => '/etc')
+      so = shell_out(command, :env => env, :cwd => '/etc', :umask => 0002)
       raise "CVS error: #{so.stderr}\n#{so.stdout}" unless so.exitstatus == 0
     end
 
