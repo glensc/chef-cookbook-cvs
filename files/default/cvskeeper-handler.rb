@@ -7,7 +7,7 @@ module Cvskeeper
     @node = nil
 
     def converge_start(run_context)
-      return unless Cvskeeper::Helpers.is_cvs_repo?
+      return unless Cvskeeper::Helpers.cvs_repo?
 
       # save resource collection for converge complete
       @resource_collection = run_context.resource_collection
@@ -24,7 +24,7 @@ module Cvskeeper
       return if files.empty?
 
       message = []
-      message << "Updated resources:"
+      message << 'Updated resources:'
       updated_resources.each do |res|
         message << "* #{res}"
       end
@@ -33,6 +33,7 @@ module Cvskeeper
     end
 
     private
+
     # The list of all resources in the current run context's +resource_collection+
     def all_resources
       @resource_collection.all_resources
@@ -69,7 +70,7 @@ module Cvskeeper
   class Helpers
     extend Chef::Mixin::ShellOut
 
-    def self.is_cvs_repo?
+    def self.cvs_repo?
       File.directory?('/etc/CVS')
     end
 
@@ -119,7 +120,7 @@ module Cvskeeper
 
     private
 
-    def self.vcs_command_add(paths, commit=true)
+    def self.vcs_command_add(paths, commit = true)
       Chef::Log.warn "Cvskeeper: adding #{paths.join(', ')}"
 
       command = ''
@@ -134,9 +135,7 @@ module Cvskeeper
     def self.vcs_command_commit(files, whence, extra_message = '')
       Chef::Log.warn "Cvskeeper: committing #{files.join(", ")}"
       message = cvs_message("- Changes #{whence} Chef recipe run")
-      if extra_message
-        message << "\n\n#{extra_message}"
-      end
+      message << "\n\n#{extra_message}" if extra_message
       command = "cvs ci -l -m '#{message}' #{files.join(' ')}"
       run_cvs(command)
     end
@@ -149,25 +148,20 @@ module Cvskeeper
     def self.get_dirs(path)
       dir = File.dirname(path)
       dirs = [dir]
-      if dir.length > 1 && dir.include?('/')
-        dirs << get_dirs(dir)
-      end
+      dirs << get_dirs(dir) if dir.length > 1 && dir.include?('/')
       dirs.reverse
     end
 
-    def self.relpath(path, target='/etc')
+    def self.relpath(path, target = '/etc')
       if path.start_with?("#{target}/")
-        path.sub(%r[#{target}(?:/|$)], '')
+        path.sub(/#{target}(?:\/|$)/, '')
       else
         nil
       end
     end
 
     def self.cvs_message(message)
-      if ENV.has_key?('SUDO_USER')
-        message << " (on behalf of #{ENV['SUDO_USER']})"
-      end
-
+      message << " (on behalf of #{ENV['SUDO_USER']})" if ENV.key?('SUDO_USER')
       message
     end
 
