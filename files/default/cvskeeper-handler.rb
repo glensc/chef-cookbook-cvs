@@ -14,7 +14,7 @@ module Cvskeeper
       @node = run_context.node
 
       files = collect_paths(all_resources)
-      Cvskeeper::Helpers.add_vcs(files)
+      Cvskeeper::Helpers.add_vcs(@node, files)
     end
 
     def converge_complete
@@ -29,7 +29,7 @@ module Cvskeeper
         message << "* #{res}"
       end
 
-      Cvskeeper::Helpers.update_vcs(files, 'after', message.join("\n"))
+      Cvskeeper::Helpers.update_vcs(@node, files, 'after', message.join("\n"))
     end
 
     private
@@ -74,8 +74,8 @@ module Cvskeeper
       File.directory?('/etc/CVS')
     end
 
-    def self.add_vcs(files)
-      add_vcs_dirs(files)
+    def self.add_vcs(node, files)
+      add_vcs_dirs(node, files)
 
       # add each file to cvs
       add_files = files
@@ -84,13 +84,13 @@ module Cvskeeper
         .reject { |f| File.symlink?(f) }
         .each { |f| files.delete(f) }
         .map { |f| relpath(f) }
-      vcs_command_add(add_files) unless add_files.empty?
+      vcs_command_add(node, add_files) unless add_files.empty?
 
       # update cvs for files that already were in cvs
-      update_vcs(files, 'before')
+      update_vcs(node, files, 'before')
     end
 
-    def self.add_vcs_dirs(files)
+    def self.add_vcs_dirs(node, files)
       # ensure dirs are in vcs
       dirs = files
         .map { |f| get_dirs(f) }
@@ -103,38 +103,38 @@ module Cvskeeper
         .compact
 
       return if dirs.empty?
-      vcs_command_add(dirs, false)
+      vcs_command_add(node, dirs, false)
 
       # cvs sucks, somewhy it doesn't update CVS/Entries when adding dirs
       vcs_command_status
     end
 
-    def self.update_vcs(files, whence, extra_message = nil)
+    def self.update_vcs(node, files, whence, extra_message = nil)
       files = files
         .reject { |f| !File.exists?(f) }
         .reject { |f| File.symlink?(f) }
         .map { |f| relpath(f) }
 
-      vcs_command_commit(files, whence, extra_message) unless files.empty?
+      vcs_command_commit(node, files, whence, extra_message) unless files.empty?
     end
 
     private
 
-    def self.vcs_command_add(paths, commit = true)
+    def self.vcs_command_add(node, paths, commit = true)
       Chef::Log.warn "Cvskeeper: adding #{paths.join(', ')}"
 
       command = ''
       command << "cvs add #{paths.join(' ')}; "
       if commit
-        message = '- Initial add from Chef recipe'
+        message = "- Initial add from Chef recipe on #{node.fqdn}"
         command << "cvs ci -m '#{cvs_message(message)}' #{paths.join(' ')}"
       end
       run_cvs(command)
     end
 
-    def self.vcs_command_commit(files, whence, extra_message = '')
+    def self.vcs_command_commit(node, files, whence, extra_message = '')
       Chef::Log.warn "Cvskeeper: committing #{files.join(", ")}"
-      message = cvs_message("- Changes #{whence} Chef recipe run")
+      message = cvs_message("- Changes #{whence} Chef recipe run on #{node.fqdn}")
       message << "\n\n#{extra_message}" if extra_message
       command = "cvs ci -l -m '#{message}' #{files.join(' ')}"
       run_cvs(command)
