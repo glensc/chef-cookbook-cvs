@@ -15,6 +15,8 @@ module Cvskeeper
 
       files = collect_paths(all_resources)
       Cvskeeper::Helpers.add_vcs(@node, files)
+    rescue => e
+      Chef::Log.warn "Cvskeeper: '#{e}':  #{e.backtrace[0]}"
     end
 
     def converge_complete
@@ -30,6 +32,8 @@ module Cvskeeper
       end
 
       Cvskeeper::Helpers.update_vcs(@node, files, 'after', message.join("\n"))
+    rescue => e
+      Chef::Log.warn "Cvskeeper: '#{e}':  #{e.backtrace[0]}"
     end
 
     private
