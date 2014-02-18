@@ -78,7 +78,7 @@ module Cvskeeper
       File.directory?('/etc/CVS')
     end
 
-    def self.add_vcs(node, files)
+    def self.add_vcs(node, files, message = nil)
       add_vcs_dirs(node, files)
 
       # add each file to cvs
@@ -88,7 +88,11 @@ module Cvskeeper
         .reject { |f| File.symlink?(f) }
         .each { |f| files.delete(f) }
         .map { |f| relpath(f) }
-      vcs_command_add(node, add_files) unless add_files.empty?
+      vcs_command_add(node, add_files, true, message) unless add_files.empty?
+
+      # assume message set, that we only want to add new files
+      # XXX refactor this!
+      return unless message == nil
 
       # update cvs for files that already were in cvs
       update_vcs(node, files, 'before')
@@ -114,6 +118,11 @@ module Cvskeeper
     end
 
     def self.update_vcs(node, files, whence, extra_message = nil)
+      # add dirs/files to vcs first
+      message = vcs_commit_message("- File added during recipe run on #{node.fqdn}")
+      message << "\n\n#{extra_message}" if extra_message
+      add_vcs(node, files, message)
+
       files = files
         .reject { |f| !File.exists?(f) }
         .reject { |f| File.symlink?(f) }
@@ -124,21 +133,21 @@ module Cvskeeper
 
     private
 
-    def self.vcs_command_add(node, paths, commit = true)
+    def self.vcs_command_add(node, paths, commit = true, message = nil)
       Chef::Log.warn "Cvskeeper: adding #{paths.join(', ')}"
 
       command = ''
       command << "cvs add #{paths.join(' ')}; "
       if commit
-        message = "- Initial add from Chef recipe on #{node.fqdn}"
-        command << "cvs ci -m '#{cvs_message(message)}' #{paths.join(' ')}"
+        message = vcs_commit_message("- Initial add from Chef recipe on #{node.fqdn}") if message == nil
+        command << "cvs ci -m '#{message}' #{paths.join(' ')}"
       end
       run_cvs(command)
     end
 
     def self.vcs_command_commit(node, files, whence, extra_message = '')
       Chef::Log.warn "Cvskeeper: committing #{files.join(", ")}"
-      message = cvs_message("- Changes #{whence} Chef recipe run on #{node.fqdn}")
+      message = vcs_commit_message("- Changes #{whence} Chef recipe run on #{node.fqdn}")
       message << "\n\n#{extra_message}" if extra_message
       command = "cvs ci -l -m '#{message}' #{files.join(' ')}"
       run_cvs(command)
@@ -164,7 +173,7 @@ module Cvskeeper
       end
     end
 
-    def self.cvs_message(message)
+    def self.vcs_commit_message(message)
       message << " (on behalf of #{ENV['SUDO_USER']})" if ENV.key?('SUDO_USER')
       message
     end
