@@ -1,5 +1,6 @@
 require 'chef/log'
 require 'chef/mixin/shell_out'
+require 'chef/event_dispatch/base'
 
 module Cvskeeper
   class EventHandler < ::Chef::EventDispatch::Base
