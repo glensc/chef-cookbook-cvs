@@ -21,5 +21,8 @@
 # Possible values: cvs, cvsnt
 default['cvs']['package'] = 'cvs'
 
+# cvskeeper: path to CVS_RSH
+default['cvs']['cvswrapper'] = nil
+
 # paths that cvskeeper should not track
 default['cvs']['cvskeeper']['exclude'] = %w[/etc/mtab /etc/ldap.secret]

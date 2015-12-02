@@ -115,7 +115,7 @@ module Cvskeeper
       vcs_command_add(node, dirs, false)
 
       # cvs sucks, somewhy it doesn't update CVS/Entries when adding dirs
-      vcs_command_status
+      vcs_command_status(node)
     end
 
     def self.update_vcs(node, files, whence, extra_message = nil)
@@ -143,7 +143,7 @@ module Cvskeeper
         message = vcs_commit_message("- Initial add from Chef recipe on #{node.fqdn}") if message == nil
         command << "cvs ci -m '#{message}' #{paths.join(' ')}"
       end
-      run_cvs(command)
+      run_cvs(node, command)
     end
 
     def self.vcs_command_commit(node, files, whence, extra_message = '')
@@ -151,12 +151,12 @@ module Cvskeeper
       message = vcs_commit_message("- Changes #{whence} Chef recipe run on #{node.fqdn}")
       message << "\n\n#{extra_message}" if extra_message
       command = "cvs ci -l -m '#{message}' #{files.join(' ')}"
-      run_cvs(command)
+      run_cvs(node, command)
     end
 
-    def self.vcs_command_status
+    def self.vcs_command_status(node)
       command = 'cvs status'
-      run_cvs(command)
+      run_cvs(node, command)
     end
 
     def self.get_dirs(path)
@@ -179,10 +179,10 @@ module Cvskeeper
       message
     end
 
-    def self.run_cvs(command)
-      cvswrapper = "#{Chef::Config['file_cache_path']}/cvswrapper"
+    def self.run_cvs(node, command)
+      cvswrapper = node['cvs']['cvswrapper']
       env = {}
-      env['CVS_RSH'] = cvswrapper if File.exists?(cvswrapper)
+      env['CVS_RSH'] = cvswrapper if cvswrapper
       command = "set -ex; #{command}"
       so = shell_out(command, :env => env, :cwd => '/etc', :umask => 0002)
       raise "CVS error: #{so.stderr}\n#{so.stdout}" unless so.exitstatus == 0
