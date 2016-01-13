@@ -185,6 +185,8 @@ module Cvskeeper
       env['CVS_RSH'] = cvswrapper if cvswrapper
       command = "set -ex; #{command}"
       so = shell_out(command, :env => env, :cwd => '/etc', :umask => 0002)
+      Chef::Log.debug("CVS[#{command}]: rc:#{so.exitstatus}, out:'#{so.stderr}', err:'#{so.stdout}'; env:#{env.inspect}")
+
       raise "CVS error: #{so.stderr}\n#{so.stdout}" unless so.exitstatus == 0
     end
 
