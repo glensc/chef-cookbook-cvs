@@ -81,6 +81,7 @@ module Cvskeeper
 
     def self.add_vcs(node, files, message = nil)
       add_vcs_dirs(node, files)
+      stat_outdated(node, files)
 
       # add each file to cvs
       add_files = files
@@ -99,8 +100,8 @@ module Cvskeeper
       update_vcs(node, files, 'before')
     end
 
+    # ensure dirs are in vcs
     def self.add_vcs_dirs(node, files)
-      # ensure dirs are in vcs
       dirs = files
         .map { |f| get_dirs(f) }
         .flatten
@@ -116,6 +117,21 @@ module Cvskeeper
 
       # cvs sucks, somewhy it doesn't update CVS/Entries when adding dirs
       vcs_command_status(node)
+    end
+
+    # check that mentioned files do not have 'Needs Merge' status
+    def self.stat_outdated(node, files)
+      files = files
+        .map { |f| relpath(f) }
+      p files
+      command = "cvs status #{files.join(' ')}"
+      so = run_cvs(node, command)
+
+      status = {}
+      so.stdout.split(/\n/).each { |line|
+        status[$1.chomp] = $2.chomp if line =~ /^File:\s+(\S+)\s+Status:\s+(.*)$/
+      }
+      Chef::Log.debug("CVS #{status.inspect}")
     end
 
     def self.update_vcs(node, files, whence, extra_message = nil)
@@ -188,6 +204,7 @@ module Cvskeeper
       Chef::Log.debug("CVS[#{command}]: rc:#{so.exitstatus}, out:'#{so.stderr}', err:'#{so.stdout}'; env:#{env.inspect}")
 
       raise "CVS error: #{so.stderr}\n#{so.stdout}" unless so.exitstatus == 0
+      return so
     end
 
     def self.in_vcs?(path)
