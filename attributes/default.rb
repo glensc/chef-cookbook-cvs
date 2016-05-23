@@ -26,3 +26,6 @@ default['cvs']['cvswrapper'] = nil
 
 # paths that cvskeeper should not track
 default['cvs']['cvskeeper']['exclude'] = %w[/etc/mtab /etc/ldap.secret]
+
+# whether to include updated_resources details in commit messages
+default['cvs']['cvskeeper']['updated_resources'] = false

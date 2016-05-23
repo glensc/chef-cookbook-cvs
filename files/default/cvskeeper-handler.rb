@@ -26,13 +26,7 @@ module Cvskeeper
       files = collect_paths(updated_resources)
       return if files.empty?
 
-      message = []
-      message << 'Updated resources:'
-      updated_resources.each do |res|
-        message << "* #{res}"
-      end
-
-      Cvskeeper::Helpers.update_vcs(@node, files, 'after', message.join("\n"))
+      Cvskeeper::Helpers.update_vcs(@node, files, 'after', updated_resources_message)
     rescue => e
       Chef::Log.warn "Cvskeeper: '#{e}':  #{e.backtrace[0]}"
     end
@@ -48,6 +42,21 @@ module Cvskeeper
     # that are marked as updated
     def updated_resources
       @resource_collection.select { |r| r.updated }
+    end
+
+    # return updated resources message
+    # can be disabled with 'updated_resources' attribute
+    def updated_resources_message
+      message = []
+
+      if @node['cvs']['cvskeeper']['updated_resources']
+        message << 'Updated resources:'
+        updated_resources.each do |res|
+          message << "* #{res}"
+        end
+      end
+
+      message.join("\n")
     end
 
     def exclude_path
