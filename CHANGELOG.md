@@ -1,6 +1,6 @@
 # Changelog for CVS Cookbook
 
-## 0.2.3 -
+## 0.2.3 - 2017-04-19
 
 * Add `node['cvs']['cvskeeper']['updated_resources']` attribute
 
