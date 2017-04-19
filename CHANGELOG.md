@@ -2,6 +2,8 @@
 
 ## 0.3.0 -
 
+* `node['cvs']['cvskeeper']['exclude']` is globs. backwards incompatible change.
+
 ## 0.2.3 - 2017-04-19
 
 * Add `node['cvs']['cvskeeper']['updated_resources']` attribute

@@ -59,9 +59,11 @@ module Cvskeeper
       message.join("\n")
     end
 
-    def exclude_path
-      r = Regexp.union(@node['cvs']['cvskeeper']['exclude'])
-      Regexp.new("^(?:#{r.source})", r.options)
+    def path_excluded?(path)
+      patterns = @node['cvs']['cvskeeper']['exclude'] || []
+      patterns.any? do |p|
+        File.fnmatch(p, path)
+      end
     end
 
     def collect_paths(resources)
@@ -76,7 +78,7 @@ module Cvskeeper
       end
 
       files.uniq.reject do |f|
-        exclude_path.match(f)
+        path_excluded?(f)
       end
     end
   end
