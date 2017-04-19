@@ -55,9 +55,9 @@ Testing
 License and Author
 ==================
 
-Author:: Elan Ruusamäe (<glen@delfi.ee>)
+Author:: Elan Ruusamäe (<glen@pld-linux.org>)
 
-Copyright 2013-2014, Elan Ruusamäe
+Copyright 2013-2017, Elan Ruusamäe
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
