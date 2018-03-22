@@ -147,7 +147,7 @@ module Cvskeeper
 
     def self.update_vcs(node, files, whence, extra_message = nil)
       # add dirs/files to vcs first
-      message = vcs_commit_message("- File added during recipe run on #{node.fqdn}")
+      message = vcs_commit_message("- File added during recipe run on #{node['fqdn']}")
       message << "\n\n#{extra_message}" if extra_message
       add_vcs(node, files, message)
 
@@ -167,7 +167,7 @@ module Cvskeeper
       command = ''
       command << "cvs add #{paths.join(' ')}; "
       if commit
-        message = vcs_commit_message("- Initial add from Chef recipe on #{node.fqdn}") if message == nil
+        message = vcs_commit_message("- Initial add from Chef recipe on #{node['fqdn']}") if message == nil
         command << "cvs ci -m '#{message}' #{paths.join(' ')}"
       end
       run_cvs(node, command)
@@ -175,7 +175,7 @@ module Cvskeeper
 
     def self.vcs_command_commit(node, files, whence, extra_message = '')
       Chef::Log.warn "Cvskeeper: committing #{files.join(", ")}"
-      message = vcs_commit_message("- Changes #{whence} Chef recipe run on #{node.fqdn}")
+      message = vcs_commit_message("- Changes #{whence} Chef recipe run on #{node['fqdn']}")
       message << "\n\n#{extra_message}" if extra_message
       command = "cvs ci -l -m '#{message}' #{files.join(' ')}"
       run_cvs(node, command)
