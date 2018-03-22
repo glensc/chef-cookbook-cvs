@@ -1,7 +1,7 @@
 #
 # Cookbook Name:: cvs
 #
-# Copyright 2013-2017, Elan Ruusamäe
+# Copyright 2013-2018, Elan Ruusamäe
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,13 +18,13 @@
 
 require 'chef/log'
 require 'chef/provider'
-require 'chef/mixin/command'
+require 'chef/mixin/shell_out'
 require 'fileutils'
 
 class Chef
   class Provider
     class Cvs < Chef::Provider
-      include Chef::Mixin::Command
+      include Chef::Mixin::ShellOut
 
       def whyrun_supported?
         true
