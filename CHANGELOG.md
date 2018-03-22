@@ -1,5 +1,9 @@
 # Changelog for CVS Cookbook
 
+## 0.4.0
+
+* Chef-13 related fixes
+
 ## 0.3.0 - 2017-04-19
 
 * `node['cvs']['cvskeeper']['exclude']` is globs. backwards incompatible change.
