@@ -1,6 +1,6 @@
 # Changelog for CVS Cookbook
 
-## 0.4.0
+## 0.4.0 - 2018-03-22
 
 * Chef-13 related fixes
 
