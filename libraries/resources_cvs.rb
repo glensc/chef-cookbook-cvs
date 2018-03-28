@@ -29,7 +29,10 @@ class Chef
       end
 
       def cvsroot(arg = nil)
-        @cvsroot, arg = nil, nil if arg == false
+        if arg == false
+            @cvsroot = nil
+            arg = nil
+        end
         set_or_return(
           :cvsroot,
           arg,
