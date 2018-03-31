@@ -192,7 +192,7 @@ module Cvskeeper
     end
 
     def self.vcs_command_commit(node, files, whence, extra_message = '')
-      Chef::Log.warn "Cvskeeper: committing #{files.join(", ")}"
+      Chef::Log.warn "Cvskeeper: committing #{files.join(', ')}"
       message = vcs_commit_message("- Changes #{whence} Chef recipe run on #{node['fqdn']}")
       message << "\n\n#{extra_message}" if extra_message
       command = "cvs ci -l -m '#{message}' #{files.join(' ')}"
