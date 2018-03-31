@@ -213,7 +213,8 @@ module Cvskeeper
       Chef::Log.debug("CVS[#{command}]: rc:#{so.exitstatus}, out:'#{so.stderr}', err:'#{so.stdout}'; env:#{env.inspect}")
 
       raise "CVS error: #{so.stderr}\n#{so.stdout}" unless so.exitstatus == 0
-      return so
+
+      so
     end
 
     def self.in_vcs?(path)
