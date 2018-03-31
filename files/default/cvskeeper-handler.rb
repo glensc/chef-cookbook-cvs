@@ -97,7 +97,7 @@ module Cvskeeper
       # add each file to cvs
       add_files = files
         .reject { |f| in_vcs?(f) }
-        .reject { |f| !File.exists?(f) }
+        .reject { |f| !File.exist?(f) }
         .reject { |f| File.symlink?(f) }
         .each { |f| files.delete(f) }
         .map { |f| relpath(f) }
@@ -118,8 +118,8 @@ module Cvskeeper
         .flatten
         .uniq
         .reject { |d| in_vcs?(d) }
-        .reject { |d| !Dir.exists?(d) }
-        .reject { |d| Dir.exists?("#{d}/CVS") }
+        .reject { |d| !Dir.exist?(d) }
+        .reject { |d| Dir.exist?("#{d}/CVS") }
         .map { |d| relpath(d) }
         .compact
 
@@ -152,7 +152,7 @@ module Cvskeeper
       add_vcs(node, files, message)
 
       files = files
-        .reject { |f| !File.exists?(f) }
+        .reject { |f| !File.exist?(f) }
         .reject { |f| File.symlink?(f) }
         .map { |f| relpath(f) }
 
@@ -219,7 +219,7 @@ module Cvskeeper
 
     def self.in_vcs?(path)
       dir, entry = File.split(path)
-      return false unless Dir.exists?("#{dir}/CVS")
+      return false unless Dir.exist?("#{dir}/CVS")
 
       is_dir = File.directory?(path)
       File.readlines("#{dir}/CVS/Entries").map do |l|
