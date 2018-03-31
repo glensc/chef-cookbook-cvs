@@ -196,8 +196,6 @@ module Cvskeeper
     def self.relpath(path, target = '/etc')
       if path.start_with?("#{target}/")
         path.sub(%r/#{target}(?:\/|$)/, '')
-      else
-        nil
       end
     end
 
