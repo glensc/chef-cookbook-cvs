@@ -59,7 +59,7 @@ module Cvskeeper
     # The list of all resources in the current run context's +resource_collection+
     # that are marked as updated
     def updated_resources
-      @resource_collection.select { |r| r.updated }
+      @resource_collection.select(&:updated)
     end
 
     # return updated resources message
