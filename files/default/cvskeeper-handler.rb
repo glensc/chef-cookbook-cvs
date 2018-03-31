@@ -212,9 +212,7 @@ module Cvskeeper
     end
 
     def self.relpath(path, target = '/etc')
-      if path.start_with?("#{target}/")
-        path.sub(%r{#{target}(?:/|$)}, '')
-      end
+      path.sub(%r{#{target}(?:/|$)}, '') if path.start_with?("#{target}/")
     end
 
     def self.vcs_commit_message(message)
