@@ -2,7 +2,7 @@
 # Cookbook Name:: cvs
 # Attributes:: default
 #
-# Copyright 2013-2017, Elan Ruusamäe
+# Copyright 2013-2018, Elan Ruusamäe
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ default['cvs']['package'] = 'cvs'
 default['cvs']['cvswrapper'] = nil
 
 # paths that cvskeeper should not track
-default['cvs']['cvskeeper']['exclude'] = %w[/etc/mtab /etc/ldap.secret]
+default['cvs']['cvskeeper']['exclude'] = %w(/etc/mtab /etc/ldap.secret)
 
 # whether to include updated_resources details in commit messages
 default['cvs']['cvskeeper']['updated_resources'] = false
