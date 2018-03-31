@@ -1,7 +1,7 @@
 #
 # Cookbook Name:: cvs
 #
-# Copyright 2013-2017, Elan Ruusamäe
+# Copyright 2013-2018, Elan Ruusamäe
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -30,8 +30,8 @@ class Chef
 
       def cvsroot(arg = nil)
         if arg == false
-            @cvsroot = nil
-            arg = nil
+          @cvsroot = nil
+          arg = nil
         end
         set_or_return(
           :cvsroot,
