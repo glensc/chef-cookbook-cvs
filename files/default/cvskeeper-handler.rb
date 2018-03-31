@@ -139,9 +139,9 @@ module Cvskeeper
       so = run_cvs(node, command)
 
       status = {}
-      so.stdout.split(/\n/).each { |line|
+      so.stdout.split(/\n/).each do |line|
         status[$1.chomp] = $2.chomp if line =~ /^File:\s+(\S+)\s+Status:\s+(.*)$/
-      }
+      end
       Chef::Log.debug("CVS #{status.inspect}")
     end
 
