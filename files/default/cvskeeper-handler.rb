@@ -195,7 +195,7 @@ module Cvskeeper
 
     def self.relpath(path, target = '/etc')
       if path.start_with?("#{target}/")
-        path.sub(/#{target}(?:\/|$)/, '')
+        path.sub(%r/#{target}(?:\/|$)/, '')
       else
         nil
       end
@@ -224,7 +224,7 @@ module Cvskeeper
 
       is_dir = File.directory?(path)
       File.readlines("#{dir}/CVS/Entries").map do |l|
-        e = l.chomp.split(/\//)
+        e = l.chomp.split(%r{/})
         return true if is_dir && e[0] == 'D' && e[1] == entry
         return true if !is_dir && e[0] != 'D' && e[1] == entry
       end
