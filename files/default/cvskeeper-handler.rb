@@ -105,7 +105,7 @@ module Cvskeeper
 
       # assume message set, that we only want to add new files
       # XXX refactor this!
-      return unless message == nil
+      return unless message.nil?
 
       # update cvs for files that already were in cvs
       update_vcs(node, files, 'before')
@@ -167,7 +167,7 @@ module Cvskeeper
       command = ''
       command << "cvs add #{paths.join(' ')}; "
       if commit
-        message = vcs_commit_message("- Initial add from Chef recipe on #{node['fqdn']}") if message == nil
+        message = vcs_commit_message("- Initial add from Chef recipe on #{node['fqdn']}") if message.nil?
         command << "cvs ci -m '#{message}' #{paths.join(' ')}"
       end
       run_cvs(node, command)
