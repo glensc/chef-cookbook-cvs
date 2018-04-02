@@ -113,7 +113,8 @@ module Cvskeeper
       stat_outdated(node, files)
 
       # add each file to cvs
-      add_files = files
+      add_files =
+        files
         .reject { |f| in_vcs?(f) }
         .reject { |f| !File.exist?(f) }
         .reject { |f| File.symlink?(f) }
@@ -131,7 +132,8 @@ module Cvskeeper
 
     # ensure dirs are in vcs
     def self.add_vcs_dirs(node, files)
-      dirs = files
+      dirs =
+        files
         .map { |f| get_dirs(f) }
         .flatten
         .uniq
@@ -150,7 +152,8 @@ module Cvskeeper
 
     # check that mentioned files do not have 'Needs Merge' status
     def self.stat_outdated(node, files)
-      files = files
+      files =
+        files
         .map { |f| relpath(f) }
       p files
       command = "cvs status #{files.join(' ')}"
@@ -169,7 +172,8 @@ module Cvskeeper
       message << "\n\n#{extra_message}" if extra_message
       add_vcs(node, files, message)
 
-      files = files
+      files =
+        files
         .reject { |f| !File.exist?(f) }
         .reject { |f| File.symlink?(f) }
         .map { |f| relpath(f) }
