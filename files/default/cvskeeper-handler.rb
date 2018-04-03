@@ -161,7 +161,8 @@ module Cvskeeper
 
       status = {}
       so.stdout.split(/\n/).each do |line|
-        status[$1.chomp] = $2.chomp if line =~ /^File:\s+(\S+)\s+Status:\s+(.*)$/
+        m = line.match(%r{^File:\s+(?<file>\S+)\s+Status:\s+(?<status>.+)$})
+        status[m[:file].chomp] = $m[:status].chomp if m
       end
       Chef::Log.debug("CVS #{status.inspect}")
     end
